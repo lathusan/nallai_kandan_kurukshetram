@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* Palette taken from the instrument and the temple:
+   jackfruit wood, holy ash, kumkum, turmeric, karanai black */
+@theme {
+  --color-wood: #5a2a17;
+  --color-wood-deep: #3d1b0e;
+  --color-ash: #f1efe9;
+  --color-ash-dark: #e3dfd5;
+  --color-kumkum: #a8102c;
+  --color-turmeric: #d9a01b;
+  --color-karanai: #1c1715;
+  --color-muted: #5f5650;
+
+  --font-display: "Rozha One", Georgia, serif;
+  --font-sans: "Hind Madurai", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-ash);
+  color: var(--color-karanai);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-turmeric);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.prose-width {
+  max-width: 68ch;
+}
+
+/* The tala beat strip on the home page: one slow pulse travelling across the eight beats */
+@keyframes beat {
+  0%, 9% { color: var(--color-turmeric); }
+  12.5%, 100% { color: inherit; }
+}
+.tala > span {
+  animation: beat 4s steps(1) infinite;
+}
+.tala > span:nth-child(2) { animation-delay: 0.5s; }
+.tala > span:nth-child(3) { animation-delay: 1s; }
+.tala > span:nth-child(4) { animation-delay: 1.5s; }
+.tala > span:nth-child(5) { animation-delay: 2s; }
+.tala > span:nth-child(6) { animation-delay: 2.5s; }
+.tala > span:nth-child(7) { animation-delay: 3s; }
+.tala > span:nth-child(8) { animation-delay: 3.5s; }
+
+/* Kolam: drawn in once when the page opens, like a line being traced by hand */
+@keyframes kolam-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes kolam-dot {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.kolam-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: kolam-draw 2.4s ease-out forwards;
+}
+.kolam-dot {
+  opacity: 0;
+  animation: kolam-dot 0.8s ease-out forwards;
+}
+
+/* Music notes rising from the drum's strap holes on each beat */
+@keyframes beat-note {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  18% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.9); }
+}
+.beat-note {
+  animation: beat-note 1.2s ease-out forwards;
+  text-shadow: 0 0 10px rgb(217 160 27 / 0.55);
+}
+@keyframes beat-hole {
+  0% { opacity: 0.95; box-shadow: 0 0 0 0 rgb(240 207 114 / 0.9); }
+  100% { opacity: 0; box-shadow: 0 0 0 10px rgb(240 207 114 / 0); }
+}
+.beat-hole {
+  background: #f0cf72;
+  animation: beat-hole 0.6s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beat-note, .beat-hole { display: none; }
+  html { scroll-behavior: auto; }
+  .tala > span { animation: none; }
+  .kolam-line { animation: none; stroke-dashoffset: 0; }
+  .kolam-dot { animation: none; opacity: 1; }
+}

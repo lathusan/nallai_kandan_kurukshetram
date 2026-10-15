@@ -6,7 +6,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isLoggedIn, sameOrigin } from "@/lib/auth";
-import { COLLECTIONS, type CollectionName, newId, updateContent, youtubeIdFrom } from "@/lib/store";
+import { COLLECTIONS, type CollectionName, canSave, newId, updateContent, youtubeIdFrom } from "@/lib/store";
 import { SCHEMA } from "@/lib/schema";
 import { removeUpload, saveUpload, UploadError } from "@/lib/uploads";
 
@@ -16,6 +16,12 @@ async function guard(req: Request, collection: string) {
   if (!sameOrigin(req)) return NextResponse.json({ error: "Request blocked." }, { status: 403 });
   if (!(await isLoggedIn())) return NextResponse.json({ error: "Your login has expired. Log in again." }, { status: 401 });
   if (!COLLECTIONS.includes(collection as CollectionName)) return NextResponse.json({ error: "Unknown section." }, { status: 404 });
+  if (!(await canSave())) {
+    return NextResponse.json(
+      { error: "This hosting can't save changes or uploads yet. Make changes on the computer version of the site for now." },
+      { status: 503 },
+    );
+  }
   return null;
 }
 

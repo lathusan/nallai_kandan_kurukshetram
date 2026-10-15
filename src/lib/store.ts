@@ -9,7 +9,7 @@
  * Hosts with read-only disks (e.g. Vercel) need a database/file store instead — see README.
  */
 import "server-only";
-import { promises as fs } from "fs";
+import { promises as fs, constants as fsConstants } from "fs";
 import path from "path";
 import crypto from "crypto";
 import { programs as samplePrograms, books as sampleBooks, videos as sampleVideos } from "@/content/site";
@@ -105,24 +105,49 @@ function seed(): Content {
   };
 }
 
-export async function readContent(): Promise<Content> {
+// When the host has no disk the site can use (e.g. Cloudflare Workers), the site
+// shows the built-in content and the admin page can't save. Kept in memory so the
+// same ids are used while this server instance runs.
+let fallback: Content | null = null;
+let readOnly = false;
+const builtIn = () => (fallback ??= seed());
+
+/** False when this host can't save files (admin changes are then disabled). */
+export async function canSave() {
+  if (readOnly) return false;
   try {
-    const raw = await fs.readFile(CONTENT_FILE, "utf8");
-    const data = JSON.parse(raw) as Partial<Content>;
-    // make sure every list exists, even if the file is from an older version
-    return {
-      posts: data.posts ?? [],
-      programs: data.programs ?? [],
-      books: data.books ?? [],
-      lessonFiles: data.lessonFiles ?? [],
-      videos: data.videos ?? [],
-    };
-  } catch (e) {
-    if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
-    const data = seed();
-    await writeContent(data);
+    await fs.mkdir(STORAGE_DIR, { recursive: true });
+    await fs.access(STORAGE_DIR, fsConstants.W_OK);
+    return true;
+  } catch {
+    readOnly = true;
+    return false;
+  }
+}
+
+export async function readContent(): Promise<Content> {
+  let raw: string;
+  try {
+    raw = await fs.readFile(CONTENT_FILE, "utf8");
+  } catch {
+    // No saved content yet (first run), or no disk at all.
+    const data = builtIn();
+    try {
+      await writeContent(data);
+    } catch {
+      readOnly = true;
+    }
     return data;
   }
+  const data = JSON.parse(raw) as Partial<Content>;
+  // make sure every list exists, even if the file is from an older version
+  return {
+    posts: data.posts ?? [],
+    programs: data.programs ?? [],
+    books: data.books ?? [],
+    lessonFiles: data.lessonFiles ?? [],
+    videos: data.videos ?? [],
+  };
 }
 
 // Writes go one at a time, to a temporary file first, so the file is never half-written.

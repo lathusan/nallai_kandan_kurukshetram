@@ -13,7 +13,7 @@ type Item = Record<string, string | boolean> & { id: string };
 const TABS = Object.keys(SCHEMA) as Name[];
 const input = "mt-1 w-full rounded border border-wood/25 bg-white px-3 py-2.5 focus:border-wood";
 
-export default function AdminDashboard({ content }: { content: Content }) {
+export default function AdminDashboard({ content, canSave = true }: { content: Content; canSave?: boolean }) {
   const router = useRouter();
   const [tab, setTab] = useState<Name>("posts");
   const [editing, setEditing] = useState<Item | "new" | null>(null);
@@ -92,6 +92,15 @@ export default function AdminDashboard({ content }: { content: Content }) {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+        {!canSave && (
+          <div role="alert" className="mb-6 rounded border border-turmeric bg-turmeric/15 px-4 py-3 text-wood">
+            <p className="font-semibold">Saving is turned off on this hosting.</p>
+            <p className="mt-1 text-sm">
+              This server has no storage for posts, photos and PDFs, so the website is showing its built-in content.
+              Changes made here can't be saved until storage is connected.
+            </p>
+          </div>
+        )}
         {editing ? (
           <ItemForm
             key={editing === "new" ? "new" : editing.id}

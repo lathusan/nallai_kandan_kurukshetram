@@ -1,6 +1,7 @@
 "use client";
 
 import { useRhythm } from "./RhythmProvider";
+import { useLang } from "./LangProvider";
 
 export function SpeakerIcon({ on, className = "h-5 w-5" }: { on: boolean; className?: string }) {
   return (
@@ -21,17 +22,18 @@ export function SpeakerIcon({ on, className = "h-5 w-5" }: { on: boolean; classN
 /** Round button above the WhatsApp button, on every page. */
 export default function SoundToggle() {
   const { playing, toggle } = useRhythm();
+  const { t } = useLang();
   return (
     <button
       type="button"
       data-rhythm-toggle
       onClick={toggle}
       aria-pressed={playing}
-      title={playing ? "Mute the mridangam" : "Play the mridangam"}
+      title={playing ? t.muteMridangam : t.playMridangam}
       className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-wood-deep text-ash shadow-lg shadow-black/25 ring-1 ring-ash/20 hover:text-turmeric"
     >
       <SpeakerIcon on={playing} className="h-6 w-6" />
-      <span className="sr-only">{playing ? "Mute the mridangam" : "Play the mridangam"}</span>
+      <span className="sr-only">{playing ? t.muteMridangam : t.playMridangam}</span>
     </button>
   );
 }

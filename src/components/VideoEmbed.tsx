@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import DrumHead from "./DrumHead";
+import { useLang } from "./LangProvider";
 
 /** Loads the YouTube player only when clicked, so the page stays fast. */
 export default function VideoEmbed({ id, title }: { id: string; title: string }) {
   const [play, setPlay] = useState(false);
+  const { t } = useLang();
 
   if (!id) {
     return (
       <div className="flex aspect-video flex-col items-center justify-center gap-3 rounded bg-wood-deep text-ash/60">
         <DrumHead className="w-16 opacity-40" />
-        <span className="text-sm">Video coming soon</span>
+        <span className="text-sm">{t.videoSoon}</span>
       </div>
     );
   }
@@ -37,7 +39,7 @@ export default function VideoEmbed({ id, title }: { id: string; title: string })
           <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
         </span>
       </span>
-      <span className="sr-only">Play video: {title}</span>
+      <span className="sr-only">{t.playVideo}: {title}</span>
     </button>
   );
 }

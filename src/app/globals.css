@@ -12,8 +12,8 @@
   --color-karanai: #1c1715;
   --color-muted: #5f5650;
 
-  --font-display: "Rozha One", Georgia, serif;
-  --font-sans: "Hind Madurai", system-ui, sans-serif;
+  --font-display: "Rozha One", "Noto Serif Tamil", Georgia, serif;
+  --font-sans: "Hind Madurai", "Noto Serif Tamil", system-ui, sans-serif;
 }
 
 html {
@@ -44,9 +44,40 @@ h3 {
   border-radius: 2px;
 }
 
+/* Tamil text runs wider than English: headings a little smaller, lines a little looser */
+html[lang="ta"] h1,
+html[lang="ta"] h2,
+html[lang="ta"] h3,
+html[lang="ta"] .font-display {
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+html[lang="ta"] body { line-height: 1.75; }
+/* Tamil words are long: never let one push the page sideways */
+html[lang="ta"] main { overflow-wrap: anywhere; }
+/* Small phones: Tamil headings one size smaller */
+@media (max-width: 480px) {
+  html[lang="ta"] h1 { font-size: 2.1rem; }
+  html[lang="ta"] h2 { font-size: 1.65rem; }
+}
+
 .prose-width {
   max-width: 68ch;
 }
+
+/* Paragraphs are justified (straight left and right edges) across the site.
+   Centred text (with a text-center class) stays centred. */
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
+/* Phones: columns are too narrow for justified text (big gaps), so align left */
+@media (max-width: 639px) {
+  p { text-align: left; }
+}
+/* The large opening paragraph of the biography: a little smaller in Tamil so it justifies evenly */
+html[lang="ta"] .bio-intro { font-size: 1.2rem; line-height: 1.7; }
 
 /* The tala beat strip on the home page: one slow pulse travelling across the eight beats */
 @keyframes beat {

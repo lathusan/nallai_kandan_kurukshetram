@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
 import BookingForm from "@/components/BookingForm";
-import { classes, faqs, site } from "@/content/site";
+import { getDict } from "@/lib/lang";
+import { getText } from "@/content/localized";
 
-export const metadata: Metadata = { title: "Classes & booking" };
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDict();
+  return { title: t.classes };
+}
 
-export default function Classes() {
+export default async function Classes() {
+  const { lang, t } = await getDict();
+  const { site, classes, faqs } = getText(lang);
   return (
     <>
       <PageHeader
-        title="Classes"
-        intro={`Mridangam lessons with ${site.guruName} for children and adults, in ${site.location.split(",")[0]} or online.`}
+        title={t.classes}
+        intro={t.classesIntro(site.guruName)}
       />
 
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
@@ -36,11 +42,9 @@ export default function Classes() {
       <section id="book" className="scroll-mt-20 bg-ash-dark/60">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <h2 className="text-4xl text-wood sm:text-5xl">Book a class</h2>
-            <p className="prose-width mt-4 text-lg">
-              Tell him who the lessons are for and when suits you. Your request opens in WhatsApp, and he will reply to confirm a time.
-            </p>
-            <p className="mt-6 text-muted">{site.contact.hours}</p>
+            <h2 className="text-4xl text-wood sm:text-5xl">{t.bookHeading}</h2>
+            <p className="prose-width mt-4 text-lg">{t.bookText}</p>
+            <p className="mt-6 text-muted">{site.hours}</p>
           </div>
           <div className="rounded bg-ash p-5 sm:p-8">
             <BookingForm />
@@ -49,7 +53,7 @@ export default function Classes() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
-        <h2 className="text-3xl text-wood sm:text-4xl">Questions</h2>
+        <h2 className="text-3xl text-wood sm:text-4xl">{t.questions}</h2>
         <div className="mt-6 max-w-3xl divide-y divide-ash-dark border-y border-ash-dark">
           {faqs.map((f, i) => (
             <details key={i} className="group py-4">

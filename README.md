@@ -1,6 +1,6 @@
-# Nallai Kandan Kurukshetram — website
+# Nallai Kurukshetram — website
 
-நல்லை கந்தன் குருஷேத்திரம்
+நல்லை குருஷேத்திரம்
 
 A Next.js website for a mridangam artist and teacher: biography, programme photos,
 books, lessons and videos, classes with WhatsApp booking, and contact details.
@@ -17,6 +17,17 @@ It works on phones, tablets and computers.
    ```
 
 3. Open http://localhost:3000 in your browser.
+
+## Languages (Tamil and English)
+
+The site opens in **Tamil**. Visitors switch with the **English / தமிழ்** button in the
+menu, and the site remembers their choice.
+
+- English text: `src/content/site.ts`
+- Tamil text: `src/content/site.ta.ts` (same items, same order)
+- Menu, button and heading wording in both languages: `src/content/ui.ts`
+- In the admin page, each item has a Tamil field next to the English one. If the Tamil
+  field is left empty, the English text is shown in both languages.
 
 ## Change the text
 

@@ -2,26 +2,30 @@
 
 import { useRhythm } from "./RhythmProvider";
 import { SpeakerIcon } from "./SoundToggle";
+import { useLang } from "./LangProvider";
 
 // Adi tala: one laghu of four beats, then two drutams of two.
+// The syllables in English letters and Tamil script; marks show how each beat is counted.
 const tala = [
-  { syl: "ta", mark: "clap" },
-  { syl: "ka", mark: "1" },
-  { syl: "di", mark: "2" },
-  { syl: "mi", mark: "3" },
-  { syl: "ta", mark: "clap" },
-  { syl: "ka", mark: "wave" },
-  { syl: "jo", mark: "clap" },
-  { syl: "nu", mark: "wave" },
+  { syl: "ta", ta: "த", mark: "clap" },
+  { syl: "ka", ta: "க", mark: "1" },
+  { syl: "di", ta: "தி", mark: "2" },
+  { syl: "mi", ta: "மி", mark: "3" },
+  { syl: "ta", ta: "த", mark: "clap" },
+  { syl: "ka", ta: "க", mark: "wave" },
+  { syl: "jo", ta: "ஜொ", mark: "clap" },
+  { syl: "nu", ta: "ணு", mark: "wave" },
 ];
 
 export default function TalaStrip() {
   const { playing, beat, toggle } = useRhythm();
+  const { lang, t } = useLang();
+  const markLabel = (m: string) => (m === "clap" ? t.clap : m === "wave" ? t.wave : m);
 
   return (
     <div className="border-t border-black/25 bg-wood-deep">
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <div role="img" className={`grid grid-cols-8 text-center ${playing ? "" : "tala"}`} aria-label="Adi tala: ta ka di mi ta ka jo nu">
+        <div role="img" className={`grid grid-cols-8 text-center ${playing ? "" : "tala"}`} aria-label={`${t.talaCaption}: ${tala.map((b) => (lang === "ta" ? b.ta : b.syl)).join(" ")}`}>
           {tala.map((b, i) => (
             <span
               key={i}
@@ -33,14 +37,14 @@ export default function TalaStrip() {
                   playing && beat === i ? "scale-110 text-turmeric" : ""
                 }`}
               >
-                {b.syl}
+                {lang === "ta" ? b.ta : b.syl}
               </span>
-              <span className="mt-1 block text-[0.7rem] text-ash/50 sm:text-xs">{b.mark}</span>
+              <span className="mt-1 block text-[0.7rem] text-ash/50 sm:text-xs">{markLabel(b.mark)}</span>
             </span>
           ))}
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-ash/60">
-          <span>Adi tala, the eight-beat cycle every student learns first</span>
+          <span>{t.talaCaption}</span>
           <button
             type="button"
             data-rhythm-toggle
@@ -49,7 +53,7 @@ export default function TalaStrip() {
             className="inline-flex items-center gap-2 rounded-full border border-ash/25 px-3 py-1 text-ash hover:border-turmeric hover:text-turmeric"
           >
             <SpeakerIcon on={playing} className="h-4 w-4" />
-            {playing ? "Mute the mridangam" : "Hear it on the mridangam"}
+            {playing ? t.talaMute : t.talaPlay}
           </button>
         </div>
       </div>

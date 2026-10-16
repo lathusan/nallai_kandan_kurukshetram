@@ -7,8 +7,8 @@
  */
 
 export const site = {
-  schoolName: "Nallai Kandan Kurukshetram",
-  schoolNameTamil: "நல்லை கந்தன் குருஷேத்திரம்",
+  schoolName: "Nallai Kurukshetram",
+  schoolNameTamil: "நல்லை குருஷேத்திரம்",
   guruName: "Sinniah Thurairajah",
   guruTitle: "Mridangam artist and teacher",
   location: "Jaffna, Sri Lanka",
@@ -17,6 +17,8 @@ export const site = {
   // Show the admin (lock) icon in the menu. Set to false once the site is finished;
   // the admin page will still be at yoursite.com/admin.
   showAdminLink: true,
+  // Website credit in the footer
+  developer: { name: "Codearson", url: "https://codearson.com" },
   // Background mridangam rhythm. true = starts on the visitor's first click or tap
   // (browsers don't allow sound before that). Visitors can mute it with the speaker button.
   rhythmOnByDefault: true,
@@ -54,35 +56,42 @@ export const site = {
 
   // Short facts shown on the home and biography pages.
   facts: [
-    { value: "1,000+", label: "concerts and temple programmes" },
-    { value: "40+", label: "years on stage" },
-    { value: "4", label: "books published" },
-    { value: "Hundreds", label: "of students taught" },
+    { value: "46", label: "years of musical journey" },
+    { value: "5,500+", label: "students trained" },
+    { value: "100+", label: "arangetrams accompanied" },
+    { value: "610+", label: "Kalavithagars accompanied" },
+    // Shown on the biography page only (the home page shows the first four)
+    { value: "25+", label: "dance arangetrams as principal accompanist" },
   ],
 };
 
 export const biography = {
   intro:
-    "Born in Jaffna, he began learning the mridangam as a child under the guidance of local masters, accompanying temple festivals before he was a teenager. Over four decades he has played alongside vocalists, violinists and veena artists across Sri Lanka and abroad, and has trained generations of students in the guru–shishya tradition.",
+    "Sinniah Thurairajah has spent 46 years on a musical journey with the mridangam. In that time he has trained more than 5,500 students, accompanied well over a hundred arangetrams, and served the North Ceylon Oriental Music Society (NCOMS) as chief examiner since 1991.",
   paragraphs: [
-    "Replace this paragraph with the first part of his biography: his family, where he grew up, and how he first came to the instrument.",
-    "Use this paragraph for his training: the gurus he studied under, the years of practice, and his arangetram.",
-    "This paragraph can cover his performing life: notable concerts, the artists he has accompanied, and the festivals where he plays every year.",
-    "Finish with his teaching: why he started the school, how he teaches, and what he hopes his students carry forward.",
+    "He served for some years as an assistant lecturer and as a music teacher in schools, retiring after completing his service.",
+    "He is a life member of the North Ceylon Oriental Music Society (NCOMS), has served on its committee, and was its treasurer for three years. Since 1991 he has been chief examiner for its Grade 1 to Grade 6 examinations.",
+    "In NCOMS teacher-grade dance performances he has accompanied more than 610 Kalavithagars on the mridangam. He has played for more than a hundred violin, veena and vocal arangetrams, and has been the principal accompanist for more than 25 dance arangetrams. His mridangam can also be heard on more than 25 recordings made for Tamil temples in Sri Lanka.",
+    "He has accompanied many singers from India. Notable among these are his performances with Muthu Kandasamy Desikar, and the three years in which he accompanied singers visiting from India at the Vallalar Kalaiyarangam in Jaffna.",
+    "He has presented more than 12 of his own students in their mridangam arangetrams; these students now live in India, London and Australia. Every year at Thannumai Pravaagam, the annual event of Nallai Kurukshetram, he brings 60 to 70 students to the stage. Over his 46-year journey with the mridangam he has trained more than 5,500 students.",
   ],
-  // A sequence of milestones, oldest first.
-  timeline: [
-    { year: "1975", text: "Begins mridangam lessons in Jaffna." },
-    { year: "1984", text: "Arangetram (debut performance)." },
-    { year: "1990", text: "Starts accompanying leading Carnatic vocalists." },
-    { year: "1998", text: "Founds Nallai Kandan Kurukshetram." },
-    { year: "2010", text: "Publishes his first mridangam lesson book." },
-    { year: "2024", text: "Passes 1,000 concerts and temple programmes." },
+  // Highlights: a number and what it stands for.
+  highlights: [
+    { value: "1991", text: "Chief examiner for NCOMS Grade 1–6 examinations, from 1991 to today." },
+    { value: "610+", text: "Kalavithagars accompanied on the mridangam in NCOMS teacher-grade dance performances." },
+    { value: "100+", text: "Violin, veena and vocal arangetrams accompanied." },
+    { value: "25+", text: "Dance arangetrams as principal accompanist." },
+    { value: "12+", text: "Students presented in their own mridangam arangetrams, now in India, London and Australia." },
+    { value: "25+", text: "Temple recordings from Sri Lanka featuring his mridangam." },
+    { value: "60–70", text: "Students brought to the stage every year at Thannumai Pravaagam." },
   ],
-  awards: [
-    "Replace with an award or title, and the year received",
-    "Another honour or recognition",
-    "Another honour or recognition",
+  // Positions he has held.
+  positions: [
+    "Life member, NCOMS",
+    "Committee member, NCOMS",
+    "Treasurer, NCOMS (three years)",
+    "Chief examiner, Grade 1–6 examinations (1991 to today)",
+    "Assistant lecturer and school music teacher (retired)",
   ],
 };
 
@@ -114,41 +123,34 @@ export const books: {
   language: string;
   description: string;
   cover: string;
+  available?: boolean; // false = shown as "not available at present"
 }[] = [
   {
-    title: "Mridangam Lessons, Part 1",
-    titleTamil: "மிருதங்கப் பாடங்கள் – பகுதி 1",
-    year: "2010",
-    pages: "120 pages",
-    language: "Tamil and English",
-    description:
-      "The first strokes, hand positions and the basic sollukattu, with exercises for each week of the first year.",
-    cover: "",
-  },
-  {
-    title: "Mridangam Lessons, Part 2",
-    titleTamil: "மிருதங்கப் பாடங்கள் – பகுதி 2",
-    year: "2014",
-    pages: "160 pages",
-    language: "Tamil and English",
-    description:
-      "Korvais, mohras and playing in the main talas, for students preparing to accompany songs.",
-    cover: "",
-  },
-  {
-    title: "The Rhythm of Nallur",
-    year: "2018",
+    title: "Pallavi Maalai",
+    titleTamil: "பல்லவி மாலை",
+    year: "",
     language: "Tamil",
     description:
-      "Notes on the percussion traditions of Jaffna's temple festivals, collected over forty years of playing at them.",
+      "The structures of 27 pallavis, written out with their swara, sahitya and jathi patterns in all three speeds and in tisra.",
     cover: "",
   },
   {
-    title: "My Life with the Mridangam",
-    titleTamil: "என் மிருதங்க வாழ்க்கை",
-    year: "2023",
+    title: "Alarippu",
+    titleTamil: "அலாரிப்பு",
+    year: "",
     language: "Tamil",
-    description: "His autobiography: growing up in Jaffna, his gurus, and a life on the concert stage.",
+    description:
+      "Drawing on the whole system of talas (the seven talas, the 35 talas, 54 rare talas, the 108 talas and the chapu talas), he chose 50 talas and set the alarippu dance form in each of them, in three speeds.",
+    cover: "",
+  },
+  {
+    title: "Grade 1 and 2 lessons (recordings)",
+    titleTamil: "தரம் 1, 2 பாடங்கள் (ஒலிப்பதிவுகள்)",
+    year: "",
+    language: "Tamil",
+    available: false,
+    description:
+      "For NCOMS Grade 1 and 2 examinations: practical explanations of each lesson, the lessons recited aloud, and the same lessons played on the mridangam.",
     cover: "",
   },
 ];
@@ -166,7 +168,7 @@ export const lessons: { title: string; level: string; summary: string }[] = [
 
 // Video references. Use the YouTube video id: the part after "v=" in the link.
 export const videos: { title: string; youtubeId: string; note: string }[] = [
-  { title: "தண்ணுமைப்பிரவாகம் – students of Nallai Kurukshetram", youtubeId: "i_eNZsBlrS4", note: "Student concert, 31 August" },
+  { title: "Thannumai Pravaagam – students of Nallai Kurukshetram", youtubeId: "i_eNZsBlrS4", note: "Annual student concert, 31 August" },
   { title: "Tani avartanam in Adi tala", youtubeId: "", note: "Concert recording" },
   { title: "Lesson: the four basic strokes", youtubeId: "", note: "Lesson video" },
   { title: "Korvai demonstration", youtubeId: "", note: "Lesson video" },
@@ -207,6 +209,6 @@ export const classes: {
 export const faqs: { q: string; a: string }[] = [
   { q: "Does my child need an instrument for the first lesson?", a: "No. Instruments are available at the school for the first months, and he can advise you on buying one." },
   { q: "What age can students start?", a: "Most students start between 6 and 10, but adults are welcome at any age." },
-  { q: "Are exams offered?", a: "Students can be prepared for grade examinations. Ask about this when you book." },
+  { q: "Are exams offered?", a: "Yes. He prepares students for the NCOMS grade examinations, for which he has been chief examiner (Grades 1–6) since 1991. Ask about this when you book." },
   { q: "How do I book?", a: "Fill in the form on the classes page. It opens WhatsApp with your details, and he will reply to confirm a time." },
 ];

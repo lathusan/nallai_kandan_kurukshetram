@@ -5,19 +5,19 @@ import BookCover from "@/components/BookCover";
 import TalaStrip from "@/components/TalaStrip";
 import Kolam from "@/components/Kolam";
 import BeatNotes from "@/components/BeatNotes";
-import { site, biography, classes } from "@/content/site";
 import { readContent, sortPosts } from "@/lib/store";
+import { getDict } from "@/lib/lang";
+import { formatDate, getText, names, pick, schoolNames } from "@/content/localized";
 
 export const dynamic = "force-dynamic";
-
-const formatDate = (d: string) =>
-  new Date(d + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
-
 
 export default async function Home() {
   const { programs: allPrograms, books, posts: allPosts } = await readContent();
   const programs = [...allPrograms].sort((a, b) => b.year.localeCompare(a.year));
   const posts = sortPosts(allPosts).slice(0, 3);
+  const { lang, t } = await getDict();
+  const { site, biography, classes } = getText(lang);
+  const other = lang === "ta" ? "en" : "ta";
   return (
     <>
       {/* Hero */}
@@ -29,8 +29,14 @@ export default async function Home() {
           <Kolam id="kolam-laptop" className="pointer-events-none hidden h-[24rem] w-full lg:max-[1408px]:block" />
 
           <div className="relative z-10">
-            <p className="text-lg text-turmeric">{site.schoolNameTamil}</p>
-            <h1 className="mt-3 text-5xl sm:text-7xl">{site.guruName}</h1>
+            <p className="text-lg text-turmeric">
+              {schoolNames[lang]} <span className="text-turmeric/60" lang={other}>· {schoolNames[other]}</span>
+            </p>
+            {/* His name in both languages: the chosen language large, the other beneath */}
+            <h1 className={`mt-3 ${lang === "ta" ? "text-4xl sm:text-5xl lg:text-6xl" : "text-5xl sm:text-7xl"}`}>{names[lang]}</h1>
+            <p lang={other} className={`mt-2 font-display text-ash/80 ${lang === "ta" ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"}`}>
+              {names[other]}
+            </p>
             <p className="mt-4 text-xl text-ash/85">
               {site.guruTitle}, {site.location}
             </p>
@@ -38,10 +44,10 @@ export default async function Home() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/classes" className="rounded bg-kumkum px-6 py-3 font-semibold hover:bg-kumkum/85">
-                Book a class
+                {t.bookClass}
               </Link>
               <Link href="/about" className="rounded border border-ash/40 px-6 py-3 font-semibold hover:border-turmeric hover:text-turmeric">
-                Read his story
+                {t.readStory}
               </Link>
             </div>
           </div>
@@ -53,7 +59,7 @@ export default async function Home() {
               <div className="absolute inset-[13.5%]">
                 <Photo
                   src={site.portrait}
-                  alt={`Portrait of ${site.guruName}`}
+                  alt={`${t.portraitOf} ${site.guruName}`}
                   priority
                   className="h-full w-full rounded-full bg-white! ring-2 ring-[#3d1b0e]"
                   sizes="(max-width: 768px) 60vw, 30vw"
@@ -70,11 +76,11 @@ export default async function Home() {
       {/* Facts */}
       <section className="border-b border-ash-dark bg-ash">
         <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-8 px-4 py-12 sm:px-6 md:grid-cols-4">
-          {site.facts.map((f) => (
-            <div key={f.label} className="border-l-2 border-kumkum pl-4">
+          {site.facts.slice(0, 4).map((f) => (
+            <div key={f.label} className="min-w-0 border-l-2 border-kumkum pl-4">
               <dt className="sr-only">{f.label}</dt>
               <dd>
-                <span className="block font-display text-3xl text-wood sm:text-4xl">{f.value}</span>
+                <span className={`block break-words font-display text-wood ${f.value.length > 8 ? "text-xl sm:text-3xl" : "text-3xl sm:text-4xl"}`}>{f.value}</span>
                 <span className="text-muted">{f.label}</span>
               </dd>
             </div>
@@ -87,19 +93,19 @@ export default async function Home() {
         <section className="border-b border-ash-dark">
           <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
             <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className="text-3xl text-wood sm:text-4xl">News</h2>
+              <h2 className="text-3xl text-wood sm:text-4xl">{t.news}</h2>
               <Link href="/news" className="font-semibold text-kumkum underline underline-offset-4 hover:text-wood">
-                All news
+                {t.allNews}
               </Link>
             </div>
             <ul className="mt-6 grid gap-6 md:grid-cols-3">
               {posts.map((p) => (
                 <li key={p.id} className="border-l-2 border-turmeric pl-4">
-                  <p className="text-sm text-muted">{formatDate(p.date)}</p>
+                  <p className="text-sm text-muted">{formatDate(p.date, lang)}</p>
                   <Link href={`/news#${p.id}`} className="mt-1 block font-display text-xl text-wood hover:text-kumkum">
-                    {p.title}
+                    {pick(p, "title", lang)}
                   </Link>
-                  <p className="mt-1 line-clamp-2 text-muted">{p.body}</p>
+                  <p className="mt-1 line-clamp-2 text-muted">{pick(p, "body", lang)}</p>
                 </li>
               ))}
             </ul>
@@ -110,11 +116,11 @@ export default async function Home() {
       {/* About */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
         <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
-          <h2 className="text-4xl text-wood sm:text-5xl">Forty years behind the mridangam</h2>
+          <h2 className="text-4xl text-wood sm:text-5xl">{t.homeAboutHeading}</h2>
           <div>
             <p className="prose-width text-lg">{biography.intro}</p>
             <Link href="/about" className="mt-6 inline-block font-semibold text-kumkum underline underline-offset-4 hover:text-wood">
-              Read the full biography
+              {t.readBiography}
             </Link>
           </div>
         </div>
@@ -124,17 +130,17 @@ export default async function Home() {
       <section className="bg-ash-dark/60">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-4xl text-wood sm:text-5xl">On stage</h2>
+            <h2 className="text-4xl text-wood sm:text-5xl">{t.onStage}</h2>
             <Link href="/programs" className="font-semibold text-kumkum underline underline-offset-4 hover:text-wood">
-              See all programmes
+              {t.seeAllPrograms}
             </Link>
           </div>
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {programs.slice(0, 3).map((p, i) => (
               <li key={i}>
-                <Photo src={p.image} alt={p.title} className="aspect-[4/3] rounded" />
-                <p className="mt-3 font-semibold">{p.title}</p>
-                <p className="text-muted">{p.place}, {p.year}</p>
+                <Photo src={p.image} alt={pick(p, "title", lang)} className="aspect-[4/3] rounded" />
+                <p className="mt-3 font-semibold">{pick(p, "title", lang)}</p>
+                <p className="text-muted">{pick(p, "place", lang)}, {p.year}</p>
               </li>
             ))}
           </ul>
@@ -145,13 +151,10 @@ export default async function Home() {
       <section className="bg-karanai text-ash">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
           <div>
-            <h2 className="text-4xl sm:text-5xl">Learn the mridangam with him</h2>
-            <p className="prose-width mt-5 text-ash/75">
-              Private, group and online lessons for children and adults, from the first stroke to arangetram.
-              Choose a time and send your request on WhatsApp.
-            </p>
+            <h2 className="text-4xl sm:text-5xl">{t.learnHeading}</h2>
+            <p className="prose-width mt-5 text-ash/75">{t.learnText}</p>
             <Link href="/classes" className="mt-8 inline-block rounded bg-kumkum px-6 py-3 font-semibold hover:bg-kumkum/85">
-              Book a class
+              {t.bookClass}
             </Link>
           </div>
           <ul className="divide-y divide-ash/15 border-y border-ash/15">
@@ -168,16 +171,16 @@ export default async function Home() {
       {/* Books */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="text-4xl text-wood sm:text-5xl">His books</h2>
+          <h2 className="text-4xl text-wood sm:text-5xl">{t.hisBooks}</h2>
           <Link href="/library" className="font-semibold text-kumkum underline underline-offset-4 hover:text-wood">
-            Visit the library
+            {t.visitLibrary}
           </Link>
         </div>
         <ul className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
           {books.map((b, i) => (
             <li key={i}>
               <BookCover book={b} />
-              <p className="mt-3 font-semibold leading-snug">{b.title}</p>
+              <p className="mt-3 font-semibold leading-snug">{lang === "ta" && b.titleTamil ? b.titleTamil : b.title}</p>
               <p className="text-sm text-muted">{b.year}</p>
             </li>
           ))}

@@ -269,7 +269,7 @@ function FieldInput({ field: f, value }: { field: Field; value: string | boolean
     case "checkbox":
       return (
         <label className="flex items-center gap-3">
-          <input type="checkbox" name={f.name} defaultChecked={value === true} className="h-5 w-5 accent-kumkum" />
+          <input type="checkbox" name={f.name} defaultChecked={value === true || (value === undefined && !!f.defaultOn)} className="h-5 w-5 accent-kumkum" />
           <span className="font-medium">{f.label}</span>
         </label>
       );

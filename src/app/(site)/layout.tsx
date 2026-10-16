@@ -4,12 +4,15 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import RhythmProvider from "@/components/RhythmProvider";
 import SoundToggle from "@/components/SoundToggle";
+import LangProvider from "@/components/LangProvider";
+import { getDict } from "@/lib/lang";
 
-export default function SiteLayout({ children }: { children: React.ReactNode }) {
+export default async function SiteLayout({ children }: { children: React.ReactNode }) {
+  const { lang, t } = await getDict();
   return (
-    <>
+    <LangProvider lang={lang}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:bg-ash focus:px-4 focus:py-2">
-        Skip to content
+        {t.skip}
       </a>
       <RhythmProvider>
         <Header />
@@ -18,6 +21,6 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
         <SoundToggle />
         <WhatsAppFloat />
       </RhythmProvider>
-    </>
+    </LangProvider>
   );
 }

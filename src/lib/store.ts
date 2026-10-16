@@ -13,14 +13,18 @@ import { promises as fs, constants as fsConstants } from "fs";
 import path from "path";
 import crypto from "crypto";
 import { programs as samplePrograms, books as sampleBooks, videos as sampleVideos } from "@/content/site";
+import { programsTa, booksTa, videosTa } from "@/content/site.ta";
 
 export const STORAGE_DIR = path.join(process.cwd(), "storage");
 const CONTENT_FILE = path.join(STORAGE_DIR, "content.json");
 
+// Fields ending in "Ta" hold the Tamil version (optional; English is shown if empty).
 export type Post = {
   id: string;
   title: string;
+  titleTa?: string;
   body: string;
+  bodyTa?: string;
   date: string; // YYYY-MM-DD
   image: string;
   pinned: boolean;
@@ -29,7 +33,9 @@ export type Post = {
 export type Program = {
   id: string;
   title: string;
+  titleTa?: string;
   place: string;
+  placeTa?: string;
   year: string;
   category: string;
   image: string;
@@ -43,24 +49,32 @@ export type Book = {
   year: string;
   pages: string;
   language: string;
+  languageTa?: string;
+  pagesTa?: string;
   description: string;
+  descriptionTa?: string;
   cover: string;
   pdf: string;
+  available?: boolean; // can be ordered (missing = yes)
 };
 
 export type LessonFile = {
   id: string;
   title: string;
+  titleTa?: string;
   level: string;
   description: string;
+  descriptionTa?: string;
   file: string;
 };
 
 export type Video = {
   id: string;
   title: string;
+  titleTa?: string;
   youtubeId: string;
   note: string;
+  noteTa?: string;
 };
 
 export type Content = {
@@ -81,27 +95,40 @@ function seed(): Content {
     posts: [
       {
         id: newId(),
+        title: "New mridangam classes begin on Vijayadashami",
+        titleTa: "விஜய தசமி அன்று புதிய மிருதங்க வகுப்புகள்",
+        body: "New mridangam classes will begin at Nallai Kurukshetram on Vijayadashami, Tuesday 20 October 2026, at 2.00 pm.\n\nFor details: 28/16 Manaltharai Lane (Sami Amma Lane), Kantharmadam, Jaffna. Phone: 077 429 9724.\n\nThank you.",
+        bodyTa: "நல்லை குருஷேத்திரத்தில் 20/10/2026 செவ்வாய்க்கிழமை விஜய தசமி அன்று பிற்பகல் 2.00 மணிக்குப் புதிய மிருதங்க நாள் வகுப்புகள் நடைபெறும்.\n\n(தொடர்புகளிற்கு – 28/16 மணல் தரை ஒழுங்கை (சாமி அம்மா ஒழுங்கை), கந்தர்மடம், யாழ்ப்பாணம். தொலைபேசி எண்: 0774299724)\n\nநன்றி.",
+        date: "2026-10-16",
+        image: "/images/posts/saraswathy.jpg",
+        pinned: true,
+      },
+      {
+        id: newId(),
         title: "Welcome to our new website",
+        titleTa: "எமது புதிய இணையதளத்துக்கு வரவேற்கிறோம்",
         body: "Class times, programmes and lesson notes will be posted here. Message us on WhatsApp to book a class.",
+        bodyTa: "வகுப்பு நேரங்கள், நிகழ்ச்சிகள், பாடக் குறிப்புகள் இங்கே வெளியிடப்படும். வகுப்புக்குப் பதிவுசெய்ய WhatsApp-இல் தொடர்புகொள்ளுங்கள்.",
         date: new Date().toISOString().slice(0, 10),
         image: "",
         pinned: false,
       },
     ],
-    programs: samplePrograms.map((p) => ({ id: newId(), ...p, link: "" })),
-    books: sampleBooks.map((b) => ({
+    programs: samplePrograms.map((p, i) => ({ id: newId(), ...p, ...programsTa[i], link: "" })),
+    books: sampleBooks.map((b, i) => ({
       id: newId(),
       title: b.title,
-      titleTamil: b.titleTamil ?? "",
       year: b.year,
       pages: b.pages ?? "",
       language: b.language,
       description: b.description,
       cover: b.cover,
       pdf: "",
+      available: b.available !== false,
+      ...booksTa[i],
     })),
     lessonFiles: [],
-    videos: sampleVideos.map((v) => ({ id: newId(), ...v })),
+    videos: sampleVideos.map((v, i) => ({ id: newId(), ...v, ...videosTa[i] })),
   };
 }
 
@@ -141,13 +168,30 @@ export async function readContent(): Promise<Content> {
   }
   const data = JSON.parse(raw) as Partial<Content>;
   // make sure every list exists, even if the file is from an older version
-  return {
+  return addSampleTamil({
     posts: data.posts ?? [],
     programs: data.programs ?? [],
     books: data.books ?? [],
     lessonFiles: data.lessonFiles ?? [],
     videos: data.videos ?? [],
+  });
+}
+
+/**
+ * Content saved before the site had Tamil: give the sample items their Tamil text.
+ * Only fills empty Tamil fields on items whose English title still matches a sample.
+ */
+function addSampleTamil(c: Content): Content {
+  const fill = <T extends object>(item: T, extra: object) => {
+    const rec = item as Record<string, unknown>;
+    for (const [k, v] of Object.entries(extra)) if (!rec[k]) rec[k] = v;
   };
+  const seedPost = seed().posts[0];
+  for (const p of c.posts) if (p.title === seedPost.title) fill(p, { titleTa: seedPost.titleTa, bodyTa: seedPost.bodyTa });
+  samplePrograms.forEach((sp, i) => c.programs.filter((p) => p.title === sp.title).forEach((p) => fill(p, programsTa[i])));
+  sampleBooks.forEach((sb, i) => c.books.filter((b) => b.title === sb.title).forEach((b) => fill(b, booksTa[i])));
+  sampleVideos.forEach((sv, i) => c.videos.filter((v) => v.title === sv.title).forEach((v) => fill(v, videosTa[i])));
+  return c;
 }
 
 // Writes go one at a time, to a temporary file first, so the file is never half-written.

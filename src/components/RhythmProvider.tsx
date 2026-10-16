@@ -160,7 +160,7 @@ export default function RhythmProvider({ children }: { children: React.ReactNode
     out.gain.linearRampToValueAtTime(level, ctx.currentTime + 1.2);
   };
 
-  const start = useCallback(async () => {
+  const start = useCallback(async (): Promise<boolean> => {
     // Real recording: streamed (not decoded into memory, so long files are fine on phones),
     // repeated when it ends, with the highlight following his actual beats.
     if (site.rhythmAudio) {
@@ -176,7 +176,7 @@ export default function RhythmProvider({ children }: { children: React.ReactNode
       try {
         await el.play();
       } catch {
-        return;
+        return false; // the browser is still waiting for a click or tap
       }
       stopScheduler();
       // gentle fade in
@@ -206,14 +206,14 @@ export default function RhythmProvider({ children }: { children: React.ReactNode
         }
       }, 30);
       setPlaying(true);
-      return;
+      return true;
     }
 
     // Synthesised
     const ctx = ensureContext();
-    if (!ctx) return;
+    if (!ctx) return false;
     await ctx.resume();
-    if (ctx.state !== "running") return;
+    if (ctx.state !== "running") return false;
     const out = outRef.current!;
     fadeIn(ctx, 0.45);
 
@@ -242,6 +242,7 @@ export default function RhythmProvider({ children }: { children: React.ReactNode
     schedule();
     timerRef.current = window.setInterval(schedule, 50);
     setPlaying(true);
+    return true;
   }, []);
 
   const stop = useCallback(() => {
@@ -268,29 +269,46 @@ export default function RhythmProvider({ children }: { children: React.ReactNode
   const toggle = useCallback(() => {
     if (playing) {
       stop();
-      try { localStorage.setItem(STORAGE_KEY, "off"); } catch {}
+      try { sessionStorage.setItem(STORAGE_KEY, "off"); } catch {}
     } else {
       start();
-      try { localStorage.setItem(STORAGE_KEY, "on"); } catch {}
+      try { sessionStorage.setItem(STORAGE_KEY, "on"); } catch {}
     }
   }, [playing, start, stop]);
 
-  // Start on the visitor's first interaction, unless they muted it before.
+  // Start as soon as the browser allows: straight away if it permits, otherwise on the
+  // visitor's first click, tap, key press or scroll. A mute lasts for this visit only;
+  // the next visit plays again.
   useEffect(() => {
     let pref: string | null = null;
-    try { pref = localStorage.getItem(STORAGE_KEY); } catch {}
-    if (pref === "off" || !site.rhythmOnByDefault && pref !== "on") return;
+    try {
+      localStorage.removeItem(STORAGE_KEY); // older versions remembered mute for good
+      pref = sessionStorage.getItem(STORAGE_KEY);
+    } catch {}
+    if (pref === "off" || (!site.rhythmOnByDefault && pref !== "on")) return;
 
-    const onFirst = (e: Event) => {
-      const target = e.target as HTMLElement | null;
-      if (target?.closest("[data-rhythm-toggle]")) return; // the button handles itself
+    let done = false;
+    let trying = false;
+    const events = ["pointerdown", "mousedown", "touchstart", "touchend", "keydown", "click", "wheel", "scroll"];
+    const remove = () => events.forEach((ev) => window.removeEventListener(ev, attempt, true));
+    async function attempt(e?: Event) {
+      if (done || trying) return;
+      const target = e?.target as HTMLElement | null;
+      if (target?.closest?.("[data-rhythm-toggle]")) return; // the speaker button handles itself
+      trying = true;
+      const ok = await start();
+      trying = false;
+      if (ok) {
+        done = true;
+        remove();
+      }
+    }
+    events.forEach((ev) => window.addEventListener(ev, attempt, { capture: true, passive: true }));
+    attempt(); // some browsers allow sound right away
+    return () => {
+      done = true;
       remove();
-      start();
     };
-    const events = ["pointerdown", "keydown", "touchstart"];
-    const remove = () => events.forEach((ev) => window.removeEventListener(ev, onFirst, true));
-    events.forEach((ev) => window.addEventListener(ev, onFirst, { capture: true, passive: true }));
-    return remove;
   }, [start]);
 
   // Pause while the tab is hidden, resume when visible again.

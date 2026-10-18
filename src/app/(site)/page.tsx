@@ -5,14 +5,16 @@ import BookCover from "@/components/BookCover";
 import TalaStrip from "@/components/TalaStrip";
 import Kolam from "@/components/Kolam";
 import BeatNotes from "@/components/BeatNotes";
-import { readContent, sortPosts } from "@/lib/store";
+import Image from "next/image";
+import { readContent, sortArangetrams, sortPosts } from "@/lib/store";
 import { getDict } from "@/lib/lang";
 import { formatDate, getText, names, pick, schoolNames } from "@/content/localized";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const { programs: allPrograms, books, posts: allPosts } = await readContent();
+  const { programs: allPrograms, arangetrams, books, posts: allPosts } = await readContent();
+  const latestArangetrams = sortArangetrams(arangetrams).slice(0, 3);
   const programs = [...allPrograms].sort((a, b) => b.year.localeCompare(a.year));
   const posts = sortPosts(allPosts).slice(0, 3);
   const { lang, t } = await getDict();
@@ -135,6 +137,21 @@ export default async function Home() {
               {t.seeAllPrograms}
             </Link>
           </div>
+          {/* Until programme photos are added, show the latest student arangetrams */}
+          {!site.showOtherProgrammes ? (
+          <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {latestArangetrams.map((a, i) => (
+              <li key={i}>
+                <div className="relative aspect-[4/3] overflow-hidden rounded bg-wood-deep">
+                  <Image src={a.image} alt={pick(a, "student", lang)} fill sizes="(max-width: 640px) 100vw, 33vw"
+                    unoptimized={a.image.startsWith("/uploads/")} className="object-contain" />
+                </div>
+                <p className="mt-3 text-left font-semibold">{pick(a, "student", lang)}</p>
+                <p className="text-left text-muted">{t.arangetram}{a.date ? `, ${formatDate(a.date, lang)}` : ""}</p>
+              </li>
+            ))}
+          </ul>
+          ) : (
           <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {programs.slice(0, 3).map((p, i) => (
               <li key={i}>
@@ -144,6 +161,7 @@ export default async function Home() {
               </li>
             ))}
           </ul>
+          )}
         </div>
       </section>
 
@@ -179,7 +197,7 @@ export default async function Home() {
         <ul className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
           {books.map((b, i) => (
             <li key={i}>
-              <BookCover book={b} />
+              <BookCover book={{ ...b, backCover: "" }} />
               <p className="mt-3 font-semibold leading-snug">{lang === "ta" && b.titleTamil ? b.titleTamil : b.title}</p>
               <p className="text-sm text-muted">{b.year}</p>
             </li>

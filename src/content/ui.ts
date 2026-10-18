@@ -61,6 +61,12 @@ const en = {
   // programmes
   programmes: "Programmes",
   programmesIntro: "Photographs from concerts, arangetrams, temple festivals and the annual Thannumai Pravaagam.",
+  arangetramsTitle: "Mridangam arangetrams of his students",
+  arangetramsIntro: "Students of Nallai Kurukshetram who have given their mridangam arangetram, newest first.",
+  otherProgrammes: "Concerts and other programmes",
+  dateNotKnown: "Date to be added",
+  arangetram: "Mridangam arangetram",
+  photo: "Photo",
   filterLabel: "Filter programmes",
   all: "All",
   showing: (n: number) => `Showing ${n} ${n === 1 ? "programme" : "programmes"}`,
@@ -84,6 +90,8 @@ const en = {
   availableToOrder: "Available to order",
   notAvailable: "Not available at present",
   coverOf: "Cover of",
+  frontCover: "Front cover",
+  backCover: "Back cover",
 
   // lessons
   lessonsTitle: "Lessons & videos",
@@ -224,6 +232,12 @@ const ta: typeof en = {
 
   programmes: "நிகழ்ச்சிகள்",
   programmesIntro: "கச்சேரிகள், அரங்கேற்றங்கள், ஆலயத் திருவிழாக்கள், வருடாந்த தண்ணுமைப் பிரவாகம் நிகழ்வுகளின் புகைப்படங்கள்.",
+  arangetramsTitle: "மாணவர்களின் மிருதங்க அரங்கேற்றங்கள்",
+  arangetramsIntro: "நல்லை குருஷேத்திரத்தில் பயின்று மிருதங்க அரங்கேற்றம் செய்த மாணவர்கள் (புதியவை முதலில்).",
+  otherProgrammes: "கச்சேரிகளும் ஏனைய நிகழ்ச்சிகளும்",
+  dateNotKnown: "திகதி பின்னர் சேர்க்கப்படும்",
+  arangetram: "மிருதங்க அரங்கேற்றம்",
+  photo: "படம்",
   filterLabel: "நிகழ்ச்சிகளை வகைப்படுத்த",
   all: "அனைத்தும்",
   showing: (n: number) => `${n} நிகழ்ச்சிகள்`,
@@ -245,6 +259,8 @@ const ta: typeof en = {
   availableToOrder: "ஓடர் செய்யலாம்",
   notAvailable: "தற்போது கிடைக்காது",
   coverOf: "அட்டைப்படம்:",
+  frontCover: "முன் அட்டை",
+  backCover: "பின் அட்டை",
 
   lessonsTitle: "பாடங்கள் & வீடியோக்கள்",
   lessonsIntro: "முதல் அடியிலிருந்து கச்சேரியில் தனி ஆவர்த்தனம் வரை அவரது மாணவர்கள் பின்பற்றும் பாதை, பார்த்துக் கற்கப் பதிவுகளுடன்.",

@@ -27,7 +27,7 @@ export type CollectionDef = {
 export const PROGRAM_CATEGORIES = ["Concert", "Temple festival", "Student recital", "Abroad", "Workshop", "Other"];
 export const LESSON_LEVELS = ["Beginner", "Intermediate", "Advanced", "All levels"];
 
-export const SCHEMA: Record<"posts" | "programs" | "books" | "lessonFiles" | "videos", CollectionDef> = {
+export const SCHEMA: Record<"posts" | "programs" | "arangetrams" | "books" | "lessonFiles" | "videos", CollectionDef> = {
   posts: {
     label: "Posts",
     singular: "post",
@@ -61,6 +61,22 @@ export const SCHEMA: Record<"posts" | "programs" | "books" | "lessonFiles" | "vi
       { name: "link", label: "Link (optional)", type: "url", hint: "A YouTube video, Facebook post or news article about this programme" },
     ],
   },
+  arangetrams: {
+    label: "Student arangetrams",
+    singular: "arangetram",
+    folder: "arangetrams",
+    titleField: "student",
+    subtitle: (i) => String(i.date || "date not known"),
+    fields: [
+      { name: "studentTa", label: "Student's name in Tamil (மாணவர் பெயர்)", type: "text", hint: "For example: தர்மலிங்கம் அமலன்" },
+      { name: "student", label: "Student's name in English", type: "text", required: true, hint: "For example: Tharmalingam Amalan" },
+      { name: "date", label: "Date of the arangetram", type: "date", hint: "Leave empty if not known" },
+      { name: "placeTa", label: "Place in Tamil (இடம்)", type: "text" },
+      { name: "place", label: "Place in English", type: "text" },
+      { name: "image", label: "Photo or invitation", type: "image", required: true },
+      { name: "image2", label: "Second photo (optional)", type: "image" },
+    ],
+  },
   books: {
     label: "Books",
     singular: "book",
@@ -78,7 +94,8 @@ export const SCHEMA: Record<"posts" | "programs" | "books" | "lessonFiles" | "vi
       { name: "descriptionTa", label: "About the book, in Tamil (நூல் பற்றி)", type: "textarea" },
       { name: "description", label: "About the book, in English", type: "textarea", required: true },
       { name: "available", label: "Available to order (shows an order button)", type: "checkbox", defaultOn: true },
-      { name: "cover", label: "Cover photo", type: "image" },
+      { name: "cover", label: "Front cover photo", type: "image" },
+      { name: "backCover", label: "Back cover photo (optional)", type: "image" },
       { name: "pdf", label: "PDF to download (optional)", type: "pdf", hint: "Only add this if the book should be free to download" },
     ],
   },

@@ -12,7 +12,7 @@ import "server-only";
 import { promises as fs, constants as fsConstants } from "fs";
 import path from "path";
 import crypto from "crypto";
-import { programs as samplePrograms, books as sampleBooks, videos as sampleVideos } from "@/content/site";
+import { programs as samplePrograms, books as sampleBooks, videos as sampleVideos, studentArangetrams } from "@/content/site";
 import { programsTa, booksTa, videosTa } from "@/content/site.ta";
 
 export const STORAGE_DIR = path.join(process.cwd(), "storage");
@@ -54,6 +54,7 @@ export type Book = {
   description: string;
   descriptionTa?: string;
   cover: string;
+  backCover?: string;
   pdf: string;
   available?: boolean; // can be ordered (missing = yes)
 };
@@ -77,15 +78,27 @@ export type Video = {
   noteTa?: string;
 };
 
+export type Arangetram = {
+  id: string;
+  student: string;
+  studentTa?: string;
+  date: string;
+  place: string;
+  placeTa?: string;
+  image: string;
+  image2?: string;
+};
+
 export type Content = {
   posts: Post[];
   programs: Program[];
+  arangetrams: Arangetram[];
   books: Book[];
   lessonFiles: LessonFile[];
   videos: Video[];
 };
 
-export const COLLECTIONS = ["posts", "programs", "books", "lessonFiles", "videos"] as const;
+export const COLLECTIONS = ["posts", "programs", "arangetrams", "books", "lessonFiles", "videos"] as const;
 export type CollectionName = (typeof COLLECTIONS)[number];
 
 export const newId = () => crypto.randomBytes(6).toString("hex");
@@ -115,6 +128,7 @@ function seed(): Content {
       },
     ],
     programs: samplePrograms.map((p, i) => ({ id: newId(), ...p, ...programsTa[i], link: "" })),
+    arangetrams: sampleArangetrams(),
     books: sampleBooks.map((b, i) => ({
       id: newId(),
       title: b.title,
@@ -123,6 +137,7 @@ function seed(): Content {
       language: b.language,
       description: b.description,
       cover: b.cover,
+      backCover: b.backCover ?? "",
       pdf: "",
       available: b.available !== false,
       ...booksTa[i],
@@ -130,6 +145,16 @@ function seed(): Content {
     lessonFiles: [],
     videos: sampleVideos.map((v, i) => ({ id: newId(), ...v, ...videosTa[i] })),
   };
+}
+
+// The same ids every time, so the list can be edited before it is first saved.
+let arangetramSeed: Arangetram[] | null = null;
+const sampleArangetrams = () =>
+  (arangetramSeed ??= studentArangetrams.map((a) => ({ id: newId(), image2: "", ...a }))).map((a) => ({ ...a }));
+
+/** Newest first; arangetrams without a date go last. */
+export function sortArangetrams(list: Arangetram[]) {
+  return [...list].sort((a, b) => (b.date || "0").localeCompare(a.date || "0"));
 }
 
 // When the host has no disk the site can use (e.g. Cloudflare Workers), the site
@@ -171,6 +196,8 @@ export async function readContent(): Promise<Content> {
   return addSampleTamil({
     posts: data.posts ?? [],
     programs: data.programs ?? [],
+    // saved before this section existed: start with the built-in list
+    arangetrams: data.arangetrams ?? sampleArangetrams(),
     books: data.books ?? [],
     lessonFiles: data.lessonFiles ?? [],
     videos: data.videos ?? [],

@@ -68,13 +68,11 @@ html[lang="ta"] main { overflow-wrap: anywhere; }
 
 /* Paragraphs are justified (straight left and right edges) across the site.
    Centred text (with a text-center class) stays centred. */
-p {
-  text-align: justify;
-  text-justify: inter-word;
-}
-/* Phones: columns are too narrow for justified text (big gaps), so align left */
-@media (max-width: 639px) {
-  p { text-align: left; }
+/* In the base layer so classes like text-center still win */
+@layer base {
+  p { text-align: justify; text-justify: inter-word; }
+  /* Phones: columns too narrow for justified text, so align left */
+  @media (max-width: 639px) { p { text-align: left; } }
 }
 /* The large opening paragraph of the biography: a little smaller in Tamil so it justifies evenly */
 html[lang="ta"] .bio-intro { font-size: 1.2rem; line-height: 1.7; }

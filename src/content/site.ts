@@ -16,7 +16,10 @@ export const site = {
     "Mridangam performance and teaching rooted in the Carnatic tradition of Jaffna.",
   // Show the admin (lock) icon in the menu. Set to false once the site is finished;
   // the admin page will still be at yoursite.com/admin.
-  showAdminLink: true,
+  showAdminLink: false,
+  // The "Concerts and other programmes" gallery on the programmes page (and on the home page).
+  // false = hidden for now; set to true once real programme photos are added.
+  showOtherProgrammes: false,
   // Website credit in the footer
   developer: { name: "Codearson", url: "https://codearson.com" },
   // Background mridangam rhythm. true = starts on the visitor's first click or tap
@@ -58,10 +61,10 @@ export const site = {
   facts: [
     { value: "46", label: "years of musical journey" },
     { value: "5,500+", label: "students trained" },
-    { value: "100+", label: "arangetrams accompanied" },
+    { value: "25+", label: "arangetrams accompanied" },
     { value: "610+", label: "Kalavithagars accompanied" },
     // Shown on the biography page only (the home page shows the first four)
-    { value: "25+", label: "dance arangetrams as principal accompanist" },
+    { value: "100+", label: "dance arangetrams as principal accompanist" },
   ],
 };
 
@@ -71,7 +74,7 @@ export const biography = {
   paragraphs: [
     "He served for some years as an assistant lecturer and as a music teacher in schools, retiring after completing his service.",
     "He is a life member of the North Ceylon Oriental Music Society (NCOMS), has served on its committee, and was its treasurer for three years. Since 1991 he has been chief examiner for its Grade 1 to Grade 6 examinations.",
-    "In NCOMS teacher-grade dance performances he has accompanied more than 610 Kalavithagars on the mridangam. He has played for more than a hundred violin, veena and vocal arangetrams, and has been the principal accompanist for more than 25 dance arangetrams. His mridangam can also be heard on more than 25 recordings made for Tamil temples in Sri Lanka.",
+    "In NCOMS teacher-grade dance performances he has accompanied more than 610 Kalavithagars on the mridangam. He has played for more than 25 violin, veena and vocal arangetrams, and has been the principal accompanist for more than a hundred dance arangetrams. His mridangam can also be heard on more than 25 recordings made for Tamil temples in Sri Lanka.",
     "He has accompanied many singers from India. Notable among these are his performances with Muthu Kandasamy Desikar, and the three years in which he accompanied singers visiting from India at the Vallalar Kalaiyarangam in Jaffna.",
     "He has presented more than 12 of his own students in their mridangam arangetrams; these students now live in India, London and Australia. Every year at Thannumai Pravaagam, the annual event of Nallai Kurukshetram, he brings 60 to 70 students to the stage. Over his 46-year journey with the mridangam he has trained more than 5,500 students.",
   ],
@@ -79,8 +82,8 @@ export const biography = {
   highlights: [
     { value: "1991", text: "Chief examiner for NCOMS Grade 1–6 examinations, from 1991 to today." },
     { value: "610+", text: "Kalavithagars accompanied on the mridangam in NCOMS teacher-grade dance performances." },
-    { value: "100+", text: "Violin, veena and vocal arangetrams accompanied." },
-    { value: "25+", text: "Dance arangetrams as principal accompanist." },
+    { value: "25+", text: "Violin, veena and vocal arangetrams accompanied." },
+    { value: "100+", text: "Dance arangetrams as principal accompanist." },
     { value: "12+", text: "Students presented in their own mridangam arangetrams, now in India, London and Australia." },
     { value: "25+", text: "Temple recordings from Sri Lanka featuring his mridangam." },
     { value: "60–70", text: "Students brought to the stage every year at Thannumai Pravaagam." },
@@ -123,6 +126,7 @@ export const books: {
   language: string;
   description: string;
   cover: string;
+  backCover?: string;
   available?: boolean; // false = shown as "not available at present"
 }[] = [
   {
@@ -132,7 +136,8 @@ export const books: {
     language: "Tamil",
     description:
       "The structures of 27 pallavis, written out with their swara, sahitya and jathi patterns in all three speeds and in tisra.",
-    cover: "",
+    cover: "/images/books/pallavi-maalai-front.jpg",
+    backCover: "/images/books/pallavi-maalai-back.jpg",
   },
   {
     title: "Alarippu",
@@ -141,7 +146,8 @@ export const books: {
     language: "Tamil",
     description:
       "Drawing on the whole system of talas (the seven talas, the 35 talas, 54 rare talas, the 108 talas and the chapu talas), he chose 50 talas and set the alarippu dance form in each of them, in three speeds.",
-    cover: "",
+    cover: "/images/books/alarippu-front.jpg",
+    backCover: "/images/books/alarippu-back.jpg",
   },
   {
     title: "Grade 1 and 2 lessons (recordings)",
@@ -211,4 +217,59 @@ export const faqs: { q: string; a: string }[] = [
   { q: "What age can students start?", a: "Most students start between 6 and 10, but adults are welcome at any age." },
   { q: "Are exams offered?", a: "Yes. He prepares students for the NCOMS grade examinations, for which he has been chief examiner (Grades 1–6) since 1991. Ask about this when you book." },
   { q: "How do I book?", a: "Fill in the form on the classes page. It opens WhatsApp with your details, and he will reply to confirm a time." },
+];
+
+// Mridangam arangetrams of his own students. Newest first on the page (sorted by date).
+// date: "YYYY-MM-DD", or "" if not known. Photos go in /public/images/arangetrams/.
+export const studentArangetrams: {
+  student: string;
+  studentTa: string;
+  date: string;
+  place: string;
+  placeTa: string;
+  image: string;
+  image2?: string;
+}[] = [
+  {
+    student: "Tharmalingam Amalan",
+    studentTa: "தர்மலிங்கம் அமலன்",
+    date: "2023-06-03",
+    place: "Ilangai Vendhan Kalai Kalloori, Neeraviyadi, Jaffna",
+    placeTa: "இலங்கை வேந்தன் கலைக்கல்லூரி, நீராவியடி, யாழ்ப்பாணம்",
+    image: "/images/arangetrams/amalan-1.jpg",
+  },
+  {
+    student: "Thivakarakkurukkal Jeyakeetha Sarma",
+    studentTa: "திவாகரக்குருக்கள் ஜெயகீத சர்மா",
+    date: "2023-03-12",
+    place: "Ilangai Vendhan Kalai Kalloori, Neeraviyadi, Jaffna",
+    placeTa: "இலங்கை வேந்தன் கலைக்கல்லூரி, நீராவியடி, யாழ்ப்பாணம்",
+    image: "/images/arangetrams/jeyakeetha-1.jpg",
+  },
+  {
+    student: "Thilakshana Ravindran",
+    studentTa: "திலக்ஷனா ரவீந்திரன்",
+    date: "2019-06-30",
+    place: "Presented by Nallai Kurukshetram",
+    placeTa: "நல்லை குருஷேத்திரம் வழங்கிய அரங்கேற்றம்",
+    image: "/images/arangetrams/thilakshana-1.jpg",
+  },
+  {
+    student: "Kalavithagar Tharmarajah Thuvaragan",
+    studentTa: "கலாவித்தகர் தருமராஜா துவாரகன்",
+    date: "2016-02-28",
+    place: "Veerasingam Hall, Jaffna",
+    placeTa: "வீரசிங்கம் மண்டபம், யாழ்ப்பாணம்",
+    image: "/images/arangetrams/thuvaragan-1.jpg",
+    image2: "/images/arangetrams/thuvaragan-2.jpg",
+  },
+  {
+    student: "Jegathas Lehinaswin Senthi",
+    studentTa: "ஜெகதாஸ் லெஹினஸ்வின்சேந்தி",
+    date: "",
+    place: "Student of Sri Akilandeswari Arulaga Fine Arts College",
+    placeTa: "ஸ்ரீ அகிலாண்டேஸ்வரி அருளக நுண்கலைக்கல்லூரி மாணவன்",
+    image: "/images/arangetrams/jegathas-1.jpg",
+    image2: "/images/arangetrams/jegathas-2.jpg",
+  },
 ];

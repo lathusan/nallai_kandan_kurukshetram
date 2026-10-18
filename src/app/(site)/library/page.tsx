@@ -26,8 +26,8 @@ export default async function Library() {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
         <ul className="divide-y divide-ash-dark">
           {books.map((b, i) => (
-            <li key={i} className="grid gap-6 py-10 first:pt-0 sm:grid-cols-[12rem_1fr] sm:gap-10">
-              <div className="w-40 sm:w-full">
+            <li key={i} className="grid gap-6 py-10 first:pt-0 md:grid-cols-[24rem_1fr] md:gap-10">
+              <div className={b.backCover ? "w-full max-w-sm" : "w-40 md:w-48"}>
                 <BookCover book={b} index={i} />
               </div>
               <div>

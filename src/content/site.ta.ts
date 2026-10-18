@@ -132,7 +132,4 @@ export const booksTa: { titleTamil: string; descriptionTa: string; languageTa: s
 
 export const videosTa: { titleTa: string; noteTa: string }[] = [
   { titleTa: "தண்ணுமைப் பிரவாகம் – நல்லை குருஷேத்திர மாணவர்கள்", noteTa: "வருடாந்த மாணவர் இசை நிகழ்வு, ஆகஸ்ட் 31" },
-  { titleTa: "ஆதி தாளத்தில் தனி ஆவர்த்தனம்", noteTa: "கச்சேரிப் பதிவு" },
-  { titleTa: "பாடம்: நான்கு அடிப்படை அடிகள்", noteTa: "பாட வீடியோ" },
-  { titleTa: "கோர்வை செய்முறை விளக்கம்", noteTa: "பாட வீடியோ" },
 ];

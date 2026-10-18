@@ -19,13 +19,13 @@ const tala = [
 
 export default function TalaStrip() {
   const { playing, beat, toggle } = useRhythm();
-  const { lang, t } = useLang();
+  const { t } = useLang();
   const markLabel = (m: string) => (m === "clap" ? t.clap : m === "wave" ? t.wave : m);
 
   return (
     <div className="border-t border-black/25 bg-wood-deep">
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <div role="img" className={`grid grid-cols-8 text-center ${playing ? "" : "tala"}`} aria-label={`${t.talaCaption}: ${tala.map((b) => (lang === "ta" ? b.ta : b.syl)).join(" ")}`}>
+        <div role="img" className={`grid grid-cols-8 text-center ${playing ? "" : "tala"}`} aria-label={`${t.talaCaption}: ${tala.map((b) => b.syl).join(" ")}`}>
           {tala.map((b, i) => (
             <span
               key={i}
@@ -33,11 +33,13 @@ export default function TalaStrip() {
               className={`block border-l border-ash/15 first:border-l-0 ${i === 4 || i === 6 ? "border-ash/50" : ""}`}
             >
               <span
+                lang="en"
+                style={{ fontWeight: 400, lineHeight: 1.1 }}
                 className={`block font-display text-2xl transition-transform duration-75 sm:text-4xl ${
                   playing && beat === i ? "scale-110 text-turmeric" : ""
                 }`}
               >
-                {lang === "ta" ? b.ta : b.syl}
+                {b.syl}
               </span>
               <span className="mt-1 block text-[0.7rem] text-ash/50 sm:text-xs">{markLabel(b.mark)}</span>
             </span>

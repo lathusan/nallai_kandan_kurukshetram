@@ -175,9 +175,6 @@ export const lessons: { title: string; level: string; summary: string }[] = [
 // Video references. Use the YouTube video id: the part after "v=" in the link.
 export const videos: { title: string; youtubeId: string; note: string }[] = [
   { title: "Thannumai Pravaagam – students of Nallai Kurukshetram", youtubeId: "i_eNZsBlrS4", note: "Annual student concert, 31 August" },
-  { title: "Tani avartanam in Adi tala", youtubeId: "", note: "Concert recording" },
-  { title: "Lesson: the four basic strokes", youtubeId: "", note: "Lesson video" },
-  { title: "Korvai demonstration", youtubeId: "", note: "Lesson video" },
 ];
 
 export const classes: {
